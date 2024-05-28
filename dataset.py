@@ -18,6 +18,14 @@ class ChineseCharacterDataset(Dataset):
             transforms.Resize((64, 64)),  # Adjust size as needed
             transforms.ToTensor(),  # Converts to tensor and scales pixel values to [0, 1]
         ])
+        
+#         # Define transformations including data augmentation
+#         transform = transforms.Compose([
+#             transforms.ToPILImage(),
+#             transforms.RandomRotation(10),
+#             transforms.RandomHorizontalFlip(),
+#             transforms.ToTensor(),
+#         ])
 
     def __len__(self):
         return len(self.image_list)
