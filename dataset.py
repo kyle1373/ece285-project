@@ -11,13 +11,14 @@ def get_full_list(root_dir):
     return data_list
 
 class ChineseCharacterDataset(Dataset):
-    def __init__(self, image_list):
+    def __init__(self, image_list, cond_type='None'):
         self.image_list = image_list
         self.transform_image = transforms.Compose([
             transforms.Grayscale(),
             transforms.Resize((64, 64)),  # Adjust size as needed
             transforms.ToTensor(),  # Converts to tensor and scales pixel values to [0, 1]
         ])
+        self.cond_type = cond_type
         
 #         # Define transformations including data augmentation
 #         transform = transforms.Compose([
@@ -36,5 +37,11 @@ class ChineseCharacterDataset(Dataset):
         
         if self.transform_image:
             image = self.transform_image(image)
+        
+        C, H, W = image.shape
+        if self.cond_type == 'Half':
+            condition = image[:, :H//2, :]  # Extracting the first half rows as condition
+        else:
+            condition = image[:, :H//2, :]  # Extracting the first half rows as condition
 
-        return image
+        return image, condition
