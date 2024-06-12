@@ -1,0 +1,7 @@
+data/
+dataset/
+dataset_gnt/
+__pycache__
+compressed_svgs.zip
+compressed_svgs
+pngs
