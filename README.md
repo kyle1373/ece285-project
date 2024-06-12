@@ -4,10 +4,9 @@ This repository contains code and models for reconstructing Chinese written char
 
 ## Getting Started
 
-### Data Loading and Preprocessing
-
-1. Download the corresponding dataset of Chinese written characters.
-2. Store the dataset under the directory `./chinese_chars/pngs`.
+### Downloading the Dataset
+1. Download https://github.com/skishore/makemeahanzi/tree/master/svgs
+2. Run `convert_dataset.py` and store them in `./chinese_chars/pngs`
 
 ### Models
 
