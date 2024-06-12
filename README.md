@@ -10,7 +10,7 @@ This repository contains code and models for reconstructing Chinese written char
 
 ### Models
 
-All model architectures are stored under the `./model` folder.
+All model architectures are stored under the `./models` folder.
 
 ### Testing the Model
 
