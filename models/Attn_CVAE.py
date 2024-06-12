@@ -2,9 +2,30 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-class CVAE(nn.Module):
+# Attention mechanism
+class Attention(nn.Module):
+    def __init__(self, in_channels):
+        super().__init__()
+        self.conv_query = nn.Conv2d(in_channels, in_channels, kernel_size=1)
+        self.conv_key = nn.Conv2d(in_channels, in_channels, kernel_size=1)
+        self.conv_value = nn.Conv2d(in_channels, in_channels, kernel_size=1)
+
+    def forward(self, x):
+        N, C, H, W = x.shape
+        q = self.conv_query(x).reshape(N, C, H*W)
+        k = self.conv_key(x).reshape(N, C, H*W)
+        v = self.conv_value(x).reshape(N, C, H*W)
+
+        attention = q.transpose(-2, -1) @ k * C**-0.5
+        attention = F.softmax(attention, dim=-1)
+        attention = v @ attention
+        attention = attention.reshape(N, C, H, W)
+        return x + attention
+
+# Conditional Variational Autoencoder (CVAE)
+class Attn_CVAE(nn.Module):
     def __init__(self, input_dim, hidden_dim, z_dim, condition_dim):
-        super(CVAE, self).__init__()
+        super(Attn_CVAE, self).__init__()
         self.z_dim = z_dim
         self.condition_dim = condition_dim
 
@@ -27,6 +48,8 @@ class CVAE(nn.Module):
             nn.Conv2d(64, 128, 4, stride=2, padding=1),
             nn.ReLU(),
         )
+        
+        self.attention = Attention(128)
         
         # Fully connected layer for condition encoding
         self.fc_condition = None
@@ -70,6 +93,7 @@ class CVAE(nn.Module):
             
         # Forward pass through the condition encoder
         x = self.condition_encoder(condition)
+        x = self.attention(x)
         batch_size = x.size(0)
         
         # Dynamically determine the size of the adaptive pooling
